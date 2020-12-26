@@ -1,4 +1,4 @@
-roms := pokered.gbc pokeblue.gbc pokeblue_debug.gbc
+roms := arired.gbc ariblue.gbc arired_debug.gbc ariblue_debug.gbc
 
 rom_obj := \
 audio.o \
@@ -11,9 +11,11 @@ gfx/pics.o \
 gfx/sprites.o \
 gfx/tilesets.o
 
-pokered_obj        := $(rom_obj:.o=_red.o)
-pokeblue_obj       := $(rom_obj:.o=_blue.o)
-pokeblue_debug_obj := $(rom_obj:.o=_blue_debug.o)
+arired_obj        := $(rom_obj:.o=_red.o)
+ariblue_obj       := $(rom_obj:.o=_blue.o)
+arired_debug_obj := $(rom_obj:.o=_red_debug.o)
+arired_debug_obj := $(rom_obj:.o=_red_debug.o)
+ariblue_debug_obj := $(rom_obj:.o=_blue_debug.o)
 
 
 ### Build tools
@@ -40,15 +42,16 @@ RGBLINK ?= $(RGBDS)rgblink
 .PHONY: all red blue blue_debug clean tidy compare tools
 
 all: $(roms)
-red:        pokered.gbc
-blue:       pokeblue.gbc
-blue_debug: pokeblue_debug.gbc
+red:        arired.gbc
+blue:       ariblue.gbc
+red_debug: arired_debug.gbc
+blue_debug: ariblue_debug.gbc
 
 clean: tidy
 	find gfx \( -iname '*.1bpp' -o -iname '*.2bpp' -o -iname '*.pic' \) -delete
 
 tidy:
-	rm -f $(roms) $(pokered_obj) $(pokeblue_obj) $(pokeblue_debug_obj) $(roms:.gbc=.map) $(roms:.gbc=.sym) rgbdscheck.o
+	rm -f $(roms) $(arired_obj) $(ariblue_obj) $(ariblue_debug_obj) $(arired_debug_obj) $(roms:.gbc=.map) $(roms:.gbc=.sym) rgbdscheck.o
 	$(MAKE) clean -C tools/
 
 compare: $(roms)
@@ -64,9 +67,10 @@ ifeq ($(DEBUG),1)
 RGBASMFLAGS += -E
 endif
 
-$(pokered_obj):        RGBASMFLAGS += -D _RED
-$(pokeblue_obj):       RGBASMFLAGS += -D _BLUE
-$(pokeblue_debug_obj): RGBASMFLAGS += -D _BLUE -D _DEBUG
+$(arired_obj):        RGBASMFLAGS += -D _RED
+$(ariblue_obj):       RGBASMFLAGS += -D _BLUE
+$(arired_debug_obj): RGBASMFLAGS += -D _RED -D _DEBUG
+$(ariblue_debug_obj): RGBASMFLAGS += -D _BLUE -D _DEBUG
 
 rgbdscheck.o: rgbdscheck.asm
 	$(RGBASM) -o $@ $<
@@ -86,9 +90,10 @@ ifeq (,$(filter clean tidy tools,$(MAKECMDGOALS)))
 $(info $(shell $(MAKE) -C tools))
 
 # Dependencies for objects (drop _red and _blue from asm file basenames)
-$(foreach obj, $(pokered_obj), $(eval $(call DEP,$(obj),$(obj:_red.o=.asm))))
-$(foreach obj, $(pokeblue_obj), $(eval $(call DEP,$(obj),$(obj:_blue.o=.asm))))
-$(foreach obj, $(pokeblue_debug_obj), $(eval $(call DEP,$(obj),$(obj:_blue_debug.o=.asm))))
+$(foreach obj, $(arired_obj), $(eval $(call DEP,$(obj),$(obj:_red.o=.asm))))
+$(foreach obj, $(ariblue_obj), $(eval $(call DEP,$(obj),$(obj:_blue.o=.asm))))
+$(foreach obj, $(arired_debug_obj), $(eval $(call DEP,$(obj),$(obj:_red_debug.o=.asm))))
+$(foreach obj, $(ariblue_debug_obj), $(eval $(call DEP,$(obj),$(obj:_blue_debug.o=.asm))))
 
 endif
 
@@ -96,13 +101,15 @@ endif
 %.asm: ;
 
 
-pokered_pad        = 0x00
-pokeblue_pad       = 0x00
-pokeblue_debug_pad = 0xff
+arired_pad        = 0x00
+ariblue_pad       = 0x00
+arired_debug_pad = 0xff
+ariblue_debug_pad = 0xff
 
-pokered_opt        = -jsv -n 0 -k 01 -l 0x33 -m 0x13 -r 03 -t "POKEMON RED"
-pokeblue_opt       = -jsv -n 0 -k 01 -l 0x33 -m 0x13 -r 03 -t "POKEMON BLUE"
-pokeblue_debug_opt = -jsv -n 0 -k 01 -l 0x33 -m 0x13 -r 03 -t "POKEMON BLUE"
+arired_opt        = -jsv -n 0 -k 01 -l 0x33 -m 0x13 -r 03 -t "ARIAMON RED"
+ariblue_opt       = -jsv -n 0 -k 01 -l 0x33 -m 0x13 -r 03 -t "ARIAMON BLUE"
+arired_debug_opt = -jsv -n 0 -k 01 -l 0x33 -m 0x13 -r 03 -t "ARIAMON RED"
+ariblue_debug_opt = -jsv -n 0 -k 01 -l 0x33 -m 0x13 -r 03 -t "ARIAMON BLUE"
 
 %.gbc: $$(%_obj) layout.link
 	$(RGBLINK) -p $($*_pad) -d -m $*.map -n $*.sym -l layout.link -o $@ $(filter %.o,$^)
