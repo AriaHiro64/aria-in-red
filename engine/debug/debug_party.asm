@@ -21,17 +21,21 @@ SetIshiharaTeam:
 	jr .loop
 
 IshiharaTeam:
-	db EXEGGUTOR, 100
-IF DEF(_DEBUG)
-	db MEW, 100
+IF DEF(_RED)
+	db CHARIZARD, 90
 ELSE
-	db MEW, 100
+	db BLASTOISE, 90
 ENDC
-	db JOLTEON, 100
-	db DUGTRIO, 100
-	db ARTICUNO, 100
 IF DEF(_DEBUG)
-	db PIKACHU, 100
+	db MEW, 5
+ELSE
+	db MEW, 20
+ENDC
+	db JOLTEON, 56
+	db DUGTRIO, 56
+	db ARTICUNO, 57
+IF DEF(_DEBUG)
+	db PIKACHU, 5
 ENDC
 	db -1 ; end
 
@@ -53,11 +57,19 @@ IF DEF(_DEBUG)
 
 	; Exeggutor gets four HM moves.
 	ld hl, wPartyMon1Moves
+IF DEF(_RED)
 	ld a, FLY
+ELSE
+	ld a, SURF
+ENDC
 	ld [hli], a
 	ld a, CUT
 	ld [hli], a
-	ld a, SURF
+IF DEF(_RED)
+	ld a, FLAMETHROWER
+ELSE
+	ld a, HYDRO_PUMP
+ENDC
 	ld [hli], a
 	ld a, STRENGTH
 	ld [hl], a

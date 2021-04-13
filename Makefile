@@ -1,4 +1,4 @@
-roms := arired.gbc ariblue.gbc arired_debug.gbc ariblue_debug.gbc
+roms := arired.gb ariblue.gb arired_debug.gb ariblue_debug.gb
 
 rom_obj := \
 audio.o \
@@ -42,16 +42,16 @@ RGBLINK ?= $(RGBDS)rgblink
 .PHONY: all red blue blue_debug clean tidy compare tools
 
 all: $(roms)
-red:        arired.gbc
-blue:       ariblue.gbc
-red_debug: arired_debug.gbc
-blue_debug: ariblue_debug.gbc
+red:        arired.gb
+blue:       ariblue.gb
+red_debug: arired_debug.gb
+blue_debug: ariblue_debug.gb
 
 clean: tidy
 	find gfx \( -iname '*.1bpp' -o -iname '*.2bpp' -o -iname '*.pic' \) -delete
 
 tidy:
-	rm -f $(roms) $(arired_obj) $(ariblue_obj) $(ariblue_debug_obj) $(arired_debug_obj) $(roms:.gbc=.map) $(roms:.gbc=.sym) rgbdscheck.o
+	rm -f $(roms) $(arired_obj) $(ariblue_obj) $(ariblue_debug_obj) $(arired_debug_obj) $(roms:.gb=.map) $(roms:.gb=.sym) rgbdscheck.o
 	$(MAKE) clean -C tools/
 
 compare: $(roms)
@@ -106,12 +106,12 @@ ariblue_pad       = 0x00
 arired_debug_pad = 0xff
 ariblue_debug_pad = 0xff
 
-arired_opt        = -jsv -n 0 -k 01 -l 0x33 -m 0x13 -r 03 -t "ARIAMON RED"
-ariblue_opt       = -jsv -n 0 -k 01 -l 0x33 -m 0x13 -r 03 -t "ARIAMON BLUE"
-arired_debug_opt = -jsv -n 0 -k 01 -l 0x33 -m 0x13 -r 03 -t "ARIAMON RED"
-ariblue_debug_opt = -jsv -n 0 -k 01 -l 0x33 -m 0x13 -r 03 -t "ARIAMON BLUE"
+arired_opt        = -jsv -n 0 -k 01 -l 0x33 -m 0x13 -r 03 -t "POKEMON RED"
+ariblue_opt       = -jsv -n 0 -k 01 -l 0x33 -m 0x13 -r 03 -t "POKEMON BLUE"
+arired_debug_opt = -jsv -n 0 -k 01 -l 0x33 -m 0x13 -r 03 -t "POKEMON RED"
+ariblue_debug_opt = -jsv -n 0 -k 01 -l 0x33 -m 0x13 -r 03 -t "POKEMON BLUE"
 
-%.gbc: $$(%_obj) layout.link
+%.gb: $$(%_obj) layout.link
 	$(RGBLINK) -p $($*_pad) -d -m $*.map -n $*.sym -l layout.link -o $@ $(filter %.o,$^)
 	$(RGBFIX) -p $($*_pad) $($*_opt) $@
 
